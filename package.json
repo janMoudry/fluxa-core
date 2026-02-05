@@ -1,0 +1,58 @@
+{
+	"name": "@moudrey/fluxa-core",
+	"version": "0.0.1",
+	"description": "Type-safe in-memory event bus core for Fluxa.",
+	"type": "module",
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"dev": "tsup src/index.ts --format cjs,esm --dts --sourcemap --watch",
+		"build": "tsup src/index.ts --format cjs,esm --dts --sourcemap",
+		"clean": "rm -rf dist",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint . --ext .ts",
+		"lint:fix": "eslint . --ext .ts --fix",
+		"test": "vitest run",
+		"prepublishOnly": "npm run clean && npm run build && npm run typecheck && npm test"
+	},
+	"keywords": [
+		"event-bus",
+		"in-memory",
+		"typed",
+		"typescript",
+		"frontend",
+		"sdk"
+	],
+	"author": "Jan Moudrý",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/janmoudry/fluxa.git"
+	},
+	"homepage": "https://github.com/janmoudry/fluxa",
+	"bugs": {
+		"url": "https://github.com/janmoudry/fluxa/issues"
+	},
+	"devDependencies": {
+		"@types/node": "^25.0.10",
+		"@typescript-eslint/eslint-plugin": "^7.8.0",
+		"@typescript-eslint/parser": "^7.8.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-import": "^2.29.1",
+		"tsup": "^8.0.1",
+		"typescript": "^5.4.5",
+		"vitest": "^1.6.1"
+	}
+}
