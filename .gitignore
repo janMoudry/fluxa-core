@@ -1,6 +1,9 @@
 # dependencies
 node_modules/
 
+# npm
+package-lock.json
+
 # build output
 dist/
 

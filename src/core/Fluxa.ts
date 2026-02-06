@@ -20,6 +20,11 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 	constructor(private readonly options: FluxaConfig = {}) {
 		this.contextId = options.context?.id ?? this.fallbackContextId();
 		this.initialized = true;
+
+		console.log(
+			`Fluxa initialized with context ID: ${this.contextId} with plugins ${options.plugins?.length ?? 0}`,
+		);
+		console.log(options.plugins);
 	}
 
 	scope<P extends string>(prefix: P) {

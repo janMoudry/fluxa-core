@@ -5,6 +5,7 @@ export type FluxaConfig = {
 		id?: string;
 		name?: string;
 	};
+	plugins?: unknown[];
 };
 
 export type FluxaEventMeta = {
