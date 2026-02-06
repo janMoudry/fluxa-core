@@ -40,11 +40,11 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/janmoudry/fluxa.git"
+		"url": "https://github.com/janMoudry/fluxa-core.git"
 	},
-	"homepage": "https://github.com/janmoudry/fluxa",
+	"homepage": "https://github.com/janMoudry/fluxa-core",
 	"bugs": {
-		"url": "https://github.com/janmoudry/fluxa/issues"
+		"url": "https://github.com/janMoudry/fluxa-core/issues"
 	},
 	"devDependencies": {
 		"@types/node": "^25.0.10",
