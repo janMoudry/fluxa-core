@@ -4,10 +4,12 @@ import { EventBus } from "./EventBus";
 import { Scope } from "./Scope";
 import type {
 	FluxaConfig,
+	FluxaEmitFn,
 	FluxaEventMap,
 	FluxaEventMeta,
 	FluxaFilter,
 	FluxaHandler,
+	FluxaPlugin,
 } from "./types";
 
 export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
@@ -17,14 +19,29 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 
 	private readonly contextId: string;
 
-	constructor(private readonly options: FluxaConfig = {}) {
+	private readonly plugins: FluxaPlugin<Events>[];
+
+	private readonly emitLocal: FluxaEmitFn<Events>;
+
+	constructor(private readonly options: FluxaConfig<Events> = {}) {
 		this.contextId = options.context?.id ?? this.fallbackContextId();
+		this.plugins = options.plugins ?? [];
+		this.emitLocal = (event, data, meta) => {
+			this.bus.emit(event, data, meta);
+		};
 		this.initialized = true;
 
 		console.log(
-			`Fluxa initialized with context ID: ${this.contextId} with plugins ${options.plugins?.length ?? 0}`,
+			`Fluxa initialized with context ID: ${this.contextId} with plugins ${this.plugins.length}`,
 		);
-		console.log(options.plugins);
+		console.log(this.plugins);
+
+		for (const plugin of this.plugins) {
+			plugin.setup?.({
+				contextId: this.contextId,
+				emitLocal: this.emitLocal,
+			});
+		}
 	}
 
 	scope<P extends string>(prefix: P) {
@@ -49,7 +66,11 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 			extra: meta,
 		});
 
-		this.bus.emit(event, data, baseMeta);
+		for (const plugin of this.plugins) {
+			plugin.onEmit?.(event, data, baseMeta, this.emitLocal);
+		}
+
+		this.emitLocal(event, data, baseMeta);
 	}
 
 	on<K extends keyof Events>(
@@ -68,6 +89,9 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 
 	destroy() {
 		this.initialized = false;
+		for (const plugin of this.plugins) {
+			plugin.onDestroy?.();
+		}
 	}
 
 	private ensureInitialized() {

@@ -95,11 +95,28 @@ bus.on(
 
 - `new Fluxa<Events>(options?: FluxaConfig)`
   - `options.context?: { id?: string; name?: string }`
+  - `options.plugins?: FluxaPlugin[]`
 - `emit(event, data, metaExtra?)`
 - `on(event, handler, filter?) => () => void`
 - `off(event, handler)`
 - `scope(prefix)`
 - `destroy()`
+
+## Plugins
+
+Fluxa Core supports lightweight plugins for transports or integrations.
+
+```ts
+type FluxaPlugin<Events> = {
+  setup?: (ctx: { contextId: string; emitLocal: FluxaEmitFn }) => void;
+  onEmit?: (event, data, meta, emitLocal) => void;
+  onDestroy?: () => void;
+};
+```
+
+- `setup` runs once during construction.
+- `onEmit` runs on every `emit()` call. Use `emitLocal` to dispatch without re-invoking plugins.
+- `onDestroy` is called from `destroy()`.
 
 ## Maintainer notes
 
