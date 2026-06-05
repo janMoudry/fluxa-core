@@ -1,6 +1,6 @@
 {
 	"name": "@moudrey/fluxa-core",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Type-safe in-memory event bus core for Fluxa.",
 	"type": "module",
 	"main": "dist/index.cjs",
@@ -40,7 +40,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/janMoudry/fluxa-core.git"
+		"url": "git+https://github.com/janMoudry/fluxa-core.git"
 	},
 	"homepage": "https://github.com/janMoudry/fluxa-core",
 	"bugs": {

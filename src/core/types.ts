@@ -32,6 +32,8 @@ export type FluxaConfig<Events extends FluxaEventMap = FluxaEventMap> = {
 	plugins?: FluxaPlugin<Events>[];
 };
 
+export type FluxaEmitMeta = Partial<FluxaEventMeta> & Record<string, unknown>;
+
 export type FluxaEventMeta = {
 	id: string;
 	timestamp: number;

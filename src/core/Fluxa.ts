@@ -4,9 +4,9 @@ import { EventBus } from "./EventBus";
 import { Scope } from "./Scope";
 import type {
 	FluxaConfig,
+	FluxaEmitMeta,
 	FluxaEmitFn,
 	FluxaEventMap,
-	FluxaEventMeta,
 	FluxaFilter,
 	FluxaHandler,
 	FluxaPlugin,
@@ -31,11 +31,6 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 		};
 		this.initialized = true;
 
-		console.log(
-			`Fluxa initialized with context ID: ${this.contextId} with plugins ${this.plugins.length}`,
-		);
-		console.log(this.plugins);
-
 		for (const plugin of this.plugins) {
 			plugin.setup?.({
 				contextId: this.contextId,
@@ -52,7 +47,7 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 	emit<K extends keyof Events>(
 		event: K,
 		data: Events[K],
-		meta?: FluxaEventMeta,
+		meta?: FluxaEmitMeta,
 	) {
 		this.ensureInitialized();
 

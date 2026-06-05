@@ -1,7 +1,7 @@
 # Fluxa Core
 
 Fluxa Core is the minimal, type-safe in-memory event bus extracted from Fluxa.
-It provides `Fluxa()` initialization, typed `emit/on/off`, and optional `scope()` namespacing.
+It provides `new Fluxa()` initialization, typed `emit/on/off`, and optional `scope()` namespacing.
 
 - Typed event bus (TypeScript generics)
 - In-memory only (no cross-tab/frame transports)
@@ -102,6 +102,10 @@ bus.on(
 - `scope(prefix)`
 - `destroy()`
 
+## Repository
+
+Source code: https://github.com/janMoudry/fluxa-core
+
 ## Plugins
 
 Fluxa Core supports lightweight plugins for transports or integrations.
@@ -127,4 +131,3 @@ type FluxaPlugin<Events> = {
 ## License
 
 MIT © Jan Moudrý
-# fluxa-core

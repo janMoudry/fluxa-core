@@ -2,7 +2,7 @@ import type {
 	FluxaEventMap,
 	FluxaHandler,
 	FluxaFilter,
-	FluxaEventMeta,
+	FluxaEmitMeta,
 } from "./types";
 import type { Fluxa } from "./Fluxa";
 
@@ -29,7 +29,7 @@ export class Scope<Events extends FluxaEventMap, P extends string> {
 	emit<K extends keyof EventsForPrefix<Events, P>>(
 		event: K,
 		data: EventsForPrefix<Events, P>[K],
-		meta?: FluxaEventMeta,
+		meta?: FluxaEmitMeta,
 	) {
 		const full = `${this.prefix}:${String(event)}` as PrefixedKeys<
 			Events,
