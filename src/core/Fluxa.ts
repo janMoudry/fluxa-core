@@ -28,12 +28,16 @@ export class Fluxa<Events extends FluxaEventMap = FluxaEventMap> {
 		this.plugins = options.plugins ?? [];
 		this.emitLocal = (event, data, meta) => {
 			this.bus.emit(event, data, meta);
+			for (const plugin of this.plugins) {
+				plugin.onEvent?.(event, data, meta);
+			}
 		};
 		this.initialized = true;
 
 		for (const plugin of this.plugins) {
 			plugin.setup?.({
 				contextId: this.contextId,
+				emit: this.emit.bind(this),
 				emitLocal: this.emitLocal,
 			});
 		}

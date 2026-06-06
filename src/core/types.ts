@@ -8,8 +8,17 @@ export type FluxaEmitFn<Events extends FluxaEventMap> = <
 	meta: FluxaEventMeta,
 ) => void;
 
+export type FluxaDispatchFn<Events extends FluxaEventMap> = <
+	K extends keyof Events,
+>(
+	event: K,
+	data: Events[K],
+	meta?: FluxaEmitMeta,
+) => void;
+
 export type FluxaPluginContext<Events extends FluxaEventMap> = {
 	contextId: string;
+	emit?: FluxaDispatchFn<Events>;
 	emitLocal: FluxaEmitFn<Events>;
 };
 
@@ -20,6 +29,11 @@ export type FluxaPlugin<Events extends FluxaEventMap = FluxaEventMap> = {
 		data: Events[K],
 		meta: FluxaEventMeta,
 		emitLocal: FluxaEmitFn<Events>,
+	) => void;
+	onEvent?: <K extends keyof Events>(
+		event: K,
+		data: Events[K],
+		meta: FluxaEventMeta,
 	) => void;
 	onDestroy?: () => void;
 };

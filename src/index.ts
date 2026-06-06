@@ -1,6 +1,7 @@
 export { Fluxa } from "./core/Fluxa";
 export type {
 	FluxaConfig,
+	FluxaDispatchFn,
 	FluxaEmitMeta,
 	FluxaEmitFn,
 	FluxaEventMap,

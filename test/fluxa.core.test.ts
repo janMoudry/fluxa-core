@@ -1,13 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import { Fluxa } from "../src/core/Fluxa";
-
-import type { FluxaEventMeta } from "../src/core/types";
+import type { FluxaEventMeta, FluxaPlugin } from "../src/core/types";
 
 type Events = {
 	"counter:inc": { amount: number };
 	"ui:click": { id: string };
 };
+
+type RemoteCounterEmitter = (
+	payload: Events["counter:inc"],
+	meta: FluxaEventMeta,
+) => void;
 
 describe("Fluxa core: emit/on/off + scope", () => {
 	it("emits and receives via memory bus by default", () => {
@@ -49,5 +53,57 @@ describe("Fluxa core: emit/on/off + scope", () => {
 		off();
 		ui.emit("click", { id: "b2" });
 		expect(clicks).toBe(1);
+	});
+
+	it("notifies plugins after local event delivery", () => {
+		const onEvent = vi.fn();
+		const bus = new Fluxa<Events>({
+			context: { id: "ctx-A" },
+			plugins: [{ onEvent }],
+		});
+
+		bus.emit("counter:inc", { amount: 4 }, { traceId: "t-event" });
+
+		expect(onEvent).toHaveBeenCalledTimes(1);
+		expect(onEvent).toHaveBeenCalledWith(
+			"counter:inc",
+			{ amount: 4 },
+			expect.objectContaining({ traceId: "t-event", path: ["ctx-A"] }),
+		);
+	});
+
+	it("notifies plugins for events delivered through emitLocal", () => {
+		const remote: { emit?: RemoteCounterEmitter } = {};
+		const onEvent = vi.fn();
+		const plugin: FluxaPlugin<Events> = {
+			setup(ctx) {
+				remote.emit = (payload, meta) => {
+					ctx.emitLocal("counter:inc", payload, meta);
+				};
+			},
+			onEvent,
+		};
+		const bus = new Fluxa<Events>({
+			context: { id: "ctx-A" },
+			plugins: [plugin],
+		});
+		const handler = vi.fn();
+		bus.on("counter:inc", handler);
+
+		expect(remote.emit).toBeTypeOf("function");
+		if (!remote.emit) throw new Error("Missing remote emitter.");
+		const dispatchRemote = remote.emit;
+		dispatchRemote(
+			{ amount: 7 },
+			{ id: "remote-1", timestamp: 1, path: ["remote"] },
+		);
+
+		expect(handler).toHaveBeenCalledTimes(1);
+		expect(onEvent).toHaveBeenCalledTimes(1);
+		expect(onEvent).toHaveBeenCalledWith(
+			"counter:inc",
+			{ amount: 7 },
+			expect.objectContaining({ id: "remote-1", path: ["remote"] }),
+		);
 	});
 });

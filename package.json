@@ -1,6 +1,6 @@
 {
 	"name": "@moudrey/fluxa-core",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Type-safe in-memory event bus core for Fluxa.",
 	"type": "module",
 	"main": "dist/index.cjs",
@@ -55,5 +55,8 @@
 		"tsup": "^8.0.1",
 		"typescript": "^5.4.5",
 		"vitest": "^1.6.1"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
